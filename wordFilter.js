@@ -1,13 +1,9 @@
 ;(function(w,u){
   
-  var regex,
-      regex_string;
-      //f_word_regex_string = '([^\\s]*([f]+[^A-Za-z0-9]*[u]+[^A-Za-z0-9]*([c]+)?[^A-Za-z0-9]*[k]+)[^\\s]*)',
-      //f_word_regex = new RegExp(f_word_regex_string,'gi'),
-      //add_f_word = false,
-      //f_word_test = function(str){ var reg = new RegExp(f_word_regex,'gi') return reg.test(str) };
+  var DEBUG = false;
   
-  var ltr = {
+  var debugLog = null;
+  var letters = {
     a : "a4@",
     b : "b6",
     c : "c",
@@ -35,6 +31,59 @@
     y : "y",
     z : "z5"
   }
+  
+  function DebugLog( msg ){
+      if( DEBUG ){
+          console.log('Debug Mode: ON');
+          return console.log.bind( window.console );
+      }
+      return function(){};
+  }
+  
+  function wordReg(str) {
+    var word = str.split(''),
+        str = '';
+    for( l in word ) {
+      str +=  '[' +  letters[ word[l] ] + ']+';
+      str += l<word.length-1? '[^A-Za-z0-9]*' : '';
+    }
+    return str;
+  }
+  
+  function WordFilter( words, debug ) {
+    
+    DEBUG = !!debug;
+
+    debugLog = new DebugLog();
+    
+    this.regex_string = null;
+    this.word_array = words;
+    
+    this.init();
+    
+  }
+  
+  WordFilter.prototype = {
+    constructor: WordFilter,
+    
+    init: function(){
+      
+    }
+    
+    test: function(str) {
+      
+    }
+    
+  }
+  
+  var regex,
+      regex_string;
+      //f_word_regex_string = '([^\\s]*([f]+[^A-Za-z0-9]*[u]+[^A-Za-z0-9]*([c]+)?[^A-Za-z0-9]*[k]+)[^\\s]*)',
+      //f_word_regex = new RegExp(f_word_regex_string,'gi'),
+      //add_f_word = false,
+      //f_word_test = function(str){ var reg = new RegExp(f_word_regex,'gi') return reg.test(str) };
+  
+  
   
   function _test(str) {
     regex = new RegExp(regex_string,'gi');
@@ -69,15 +118,7 @@
     this.test = _test;
   }
   
-  function wordReg(str) {
-    var word = str.split(''),
-        str = '';
-    for( l in word ) {
-      str +=  '[' +  ltr[ word[l] ] + ']+';
-      str += l<word.length-1? '[^A-Za-z0-9]*' : '';
-    }
-    return str;
-  }
+  
   
   w.Filter = Filter;
 })(window,undefined);
